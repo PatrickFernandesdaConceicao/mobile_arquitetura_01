@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:product_app/presentation/pages/initial_page.dart';
+import 'package:product_app/presentation/pages/login_page.dart';
 import 'package:product_app/presentation/pages/product_page.dart';
 import 'package:product_app/presentation/pages/product_details_page.dart';
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const InitialPage(),
+        '/': (context) => const LoginPage(),
         '/products': (context) => const ProductPage(),
       },
       onGenerateRoute: (settings) {

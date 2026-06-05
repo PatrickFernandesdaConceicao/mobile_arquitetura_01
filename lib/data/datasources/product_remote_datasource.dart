@@ -4,19 +4,24 @@ import 'package:product_app/core/network/client_http.dart';
 
 class ProductRemoteDatasource {
   final HttpClient client;
-  static const _baseUrl = "https://fakestoreapi.com/products";
+  static const _baseUrl = "https://dummyjson.com/products";
 
   ProductRemoteDatasource(this.client);
 
   Future<List<ProductModel>> getProducts() async {
     final response = await client.get(_baseUrl);
-    final List data = jsonDecode(response.body) as List;
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao carregar produtos: ${response.statusCode}');
+    }
+    final Map<String, dynamic> body =
+        jsonDecode(response.body) as Map<String, dynamic>;
+    final List data = body['products'] as List;
     return data.map((json) => ProductModel.fromJson(json)).toList();
   }
 
   Future<ProductModel> addProduct(ProductModel product) async {
     final response = await client.post(
-      _baseUrl,
+      '$_baseUrl/add',
       body: jsonEncode(product.toJson()),
     );
     return ProductModel.fromJson(jsonDecode(response.body));

@@ -15,11 +15,11 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id: json["id"],
-      title: json["title"],
-      price: json["price"].toDouble(),
+      id: json["id"] as int,
+      title: json["title"] as String,
+      price: (json["price"] as num).toDouble(),
       description: (json["description"] as String?) ?? '',
-      image: json["image"],
+      image: (json["thumbnail"] as String?) ?? (json["image"] as String? ?? ''),
     );
   }
 
@@ -29,7 +29,7 @@ class ProductModel {
       "title": title,
       "price": price,
       "description": description,
-      "image": image,
+      "thumbnail": image,
     };
   }
 }

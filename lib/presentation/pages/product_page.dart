@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:product_app/presentation/providers/auth_provider.dart';
 import 'package:product_app/presentation/providers/product_provider.dart';
 import 'package:product_app/presentation/pages/product_form_page.dart';
 
-class ProductPage extends ConsumerWidget {
+class ProductPage extends ConsumerStatefulWidget {
   const ProductPage({super.key});
+
+  @override
+  ConsumerState<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends ConsumerState<ProductPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(productListProvider.notifier).loadProducts();
+    });
+  }
 
   Future<void> _confirmDelete(
     BuildContext context,
@@ -34,24 +48,68 @@ class ProductPage extends ConsumerWidget {
     }
   }
 
+  void _logout(BuildContext context) {
+    ref.read(authProvider.notifier).logout();
+    Navigator.pushReplacementNamed(context, '/');
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final state = ref.watch(productListProvider);
     final notifier = ref.read(productListProvider.notifier);
+    final authState = ref.watch(authProvider);
     final favCount = state.favoriteCount;
+    final userName = authState.user?.firstName ?? '';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Products${favCount > 0 ? ' ($favCount fav${favCount > 1 ? 's' : ''})' : ''}',
+        automaticallyImplyLeading: false,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Produtos${favCount > 0 ? ' ($favCount fav${favCount > 1 ? 's' : ''})' : ''}',
+            ),
+            if (userName.isNotEmpty)
+              Text(
+                'Olá, $userName',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.white70),
+              ),
+          ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sair',
+            onPressed: () => _logout(context),
+          ),
+        ],
       ),
       body: Builder(builder: (context) {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
         if (state.error != null) {
-          return Center(child: Text(state.error!));
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(state.error!, textAlign: TextAlign.center),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: () => notifier.loadProducts(),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Tentar novamente'),
+                ),
+              ],
+            ),
+          );
+        }
+        if (state.products.isEmpty) {
+          return const Center(child: Text('Nenhum produto encontrado.'));
         }
         return ListView.builder(
           itemCount: state.products.length,
@@ -74,7 +132,7 @@ class ProductPage extends ConsumerWidget {
                 ),
               ),
               title: Text(product.title),
-              subtitle: Text('\$${product.price}'),
+              subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
