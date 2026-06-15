@@ -42,10 +42,9 @@ lib/
 │   ├── entities/        # Entidades de domínio (Product, User)
 │   └── repositories/    # Contratos dos repositórios
 └── presentation/
-    ├── pages/           # Telas (Login, Produtos, Detalhes, Formulário)
+    ├── pages/           # Telas (Login, Produtos, Detalhes)
     ├── providers/       # Providers Riverpod (auth, produtos)
-    ├── states/          # Classes de estado
-    └── viewmodels/      # ViewModel auxiliar
+    └── states/          # Classes de estado
 ```
 
 ---
@@ -94,8 +93,7 @@ A interface é reconstruída automaticamente via `ref.watch` sempre que o estado
 
 Base URL: `https://dummyjson.com`
 
-| Endpoint          | Método | Uso                        |
-|-------------------|--------|----------------------------|
-| `/auth/login`     | POST   | Autenticação do usuário    |
-| `/products`       | GET    | Lista de produtos          |
-| `/products/{id}`  | GET    | Detalhes do produto        |
+| Endpoint        | Método | Uso                        |
+|-----------------|--------|----------------------------|
+| `/auth/login`   | POST   | Autenticação do usuário    |
+| `/products`     | GET    | Lista de produtos          |

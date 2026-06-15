@@ -49,8 +49,6 @@ class ProductListNotifier extends StateNotifier<ProductState> {
   Future<void> addProduct(Product product) async {
     try {
       final created = await repository.addProduct(product);
-      // A FakeStore API retorna id=21 para todos os POSTs (mock).
-      // Em uma API real, usaríamos `created` diretamente.
       state = state.copyWith(products: [...state.products, created]);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -90,7 +88,7 @@ extension ProductStateX on ProductState {
   int get favoriteCount => products.where((p) => p.isFavorite).length;
 }
 
-final productByIdProvider = Provider.family<dynamic, int>((ref, id) {
+final productByIdProvider = Provider.family<Product?, int>((ref, id) {
   final products = ref.watch(productListProvider).products;
   try {
     return products.firstWhere((p) => p.id == id);

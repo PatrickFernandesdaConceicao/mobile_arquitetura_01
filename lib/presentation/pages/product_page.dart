@@ -20,12 +20,7 @@ class _ProductPageState extends ConsumerState<ProductPage> {
     });
   }
 
-  Future<void> _confirmDelete(
-    BuildContext context,
-    WidgetRef ref,
-    int id,
-    String title,
-  ) async {
+  Future<void> _confirmDelete(int id, String title) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -163,8 +158,7 @@ class _ProductPageState extends ConsumerState<ProductPage> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    onPressed: () =>
-                        _confirmDelete(context, ref, product.id, product.title),
+                    onPressed: () => _confirmDelete(product.id, product.title),
                   ),
                 ],
               ),
