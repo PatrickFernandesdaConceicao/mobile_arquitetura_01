@@ -94,8 +94,8 @@ A interface é reconstruída automaticamente via `ref.watch` sempre que o estado
 
 Base URL: `https://dummyjson.com`
 
-| Endpoint        | Método | Uso                        |
-|-----------------|--------|----------------------------|
-| `/auth/login`   | POST   | Autenticação do usuário    |
-| `/products`     | GET    | Lista de produtos          |
-
+| Endpoint          | Método | Uso                        |
+|-------------------|--------|----------------------------|
+| `/auth/login`     | POST   | Autenticação do usuário    |
+| `/products`       | GET    | Lista de produtos          |
+| `/products/{id}`  | GET    | Detalhes do produto        |
