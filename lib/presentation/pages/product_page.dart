@@ -55,9 +55,16 @@ class _ProductPageState extends ConsumerState<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    if (!authState.isAuthenticated) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, '/');
+      });
+      return const Scaffold(body: SizedBox.shrink());
+    }
+
     final state = ref.watch(productListProvider);
     final notifier = ref.read(productListProvider.notifier);
-    final authState = ref.watch(authProvider);
     final favCount = state.favoriteCount;
     final userName = authState.user?.firstName ?? '';
 
