@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:product_app/presentation/providers/auth_provider.dart';
 import 'package:product_app/presentation/providers/product_provider.dart';
 import 'package:product_app/presentation/pages/product_form_page.dart';
+import 'package:product_app/presentation/pages/favorites_page.dart';
 
 class ProductPage extends ConsumerStatefulWidget {
   const ProductPage({super.key});
@@ -69,9 +70,7 @@ class _ProductPageState extends ConsumerState<ProductPage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Produtos${favCount > 0 ? ' ($favCount fav${favCount > 1 ? 's' : ''})' : ''}',
-            ),
+            const Text('Produtos'),
             if (userName.isNotEmpty)
               Text(
                 'Olá, $userName',
@@ -83,6 +82,37 @@ class _ProductPageState extends ConsumerState<ProductPage> {
           ],
         ),
         actions: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.favorite),
+                tooltip: 'Favoritos',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FavoritesPage()),
+                ),
+              ),
+              if (favCount > 0)
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                    child: Text(
+                      '$favCount',
+                      style: const TextStyle(color: Colors.white, fontSize: 10),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Sair',
