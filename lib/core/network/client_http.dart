@@ -27,6 +27,14 @@ class HttpClient {
     );
   }
 
+  Future<http.Response> patch(String path, {String? body}) async {
+    return await _client.patch(
+      Uri.parse(path),
+      headers: _headers,
+      body: body,
+    );
+  }
+
   Future<http.Response> delete(String path) async {
     return await _client.delete(Uri.parse(path), headers: _headers);
   }

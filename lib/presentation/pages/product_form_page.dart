@@ -4,9 +4,7 @@ import 'package:product_app/domain/entities/product.dart';
 import 'package:product_app/presentation/providers/product_provider.dart';
 
 class ProductFormPage extends ConsumerStatefulWidget {
-  final Product? product;
-
-  const ProductFormPage({super.key, this.product});
+  const ProductFormPage({super.key});
 
   @override
   ConsumerState<ProductFormPage> createState() => _ProductFormPageState();
@@ -20,17 +18,13 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   late final TextEditingController _imageController;
   bool _isLoading = false;
 
-  bool get _isEditing => widget.product != null;
-
   @override
   void initState() {
     super.initState();
-    final p = widget.product;
-    _titleController = TextEditingController(text: p?.title ?? '');
-    _priceController =
-        TextEditingController(text: p != null ? p.price.toString() : '');
-    _descriptionController = TextEditingController(text: p?.description ?? '');
-    _imageController = TextEditingController(text: p?.image ?? '');
+    _titleController = TextEditingController();
+    _priceController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _imageController = TextEditingController();
   }
 
   @override
@@ -47,19 +41,14 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
     setState(() => _isLoading = true);
 
     final product = Product(
-      id: widget.product?.id ?? 0,
+      id: 0,
       title: _titleController.text.trim(),
       price: double.parse(_priceController.text.trim()),
       description: _descriptionController.text.trim(),
       image: _imageController.text.trim(),
     );
 
-    final notifier = ref.read(productListProvider.notifier);
-    if (_isEditing) {
-      await notifier.updateProduct(product);
-    } else {
-      await notifier.addProduct(product);
-    }
+    await ref.read(productListProvider.notifier).addProduct(product);
 
     if (mounted) Navigator.pop(context);
   }
@@ -68,7 +57,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Editar produto' : 'Novo produto'),
+        title: const Text('Novo produto'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -139,7 +128,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : Text(_isEditing ? 'Salvar' : 'Adicionar'),
+                      : const Text('Adicionar'),
                 ),
               ),
             ],

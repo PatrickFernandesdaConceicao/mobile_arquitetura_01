@@ -67,21 +67,27 @@ class _ProductPageState extends ConsumerState<ProductPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Produtos'),
-            if (userName.isNotEmpty)
-              Text(
-                'Olá, $userName',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: Colors.white70),
-              ),
-          ],
-        ),
+        toolbarHeight: 64,
+        title: const Text('Produtos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         actions: [
+          if (userName.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Tooltip(
+                message: userName,
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  child: Text(
+                    userName[0].toUpperCase(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           Stack(
             alignment: Alignment.center,
             children: [
@@ -176,15 +182,6 @@ class _ProductPageState extends ConsumerState<ProductPage> {
                       color: product.isFavorite ? Colors.red : null,
                     ),
                     onPressed: () => notifier.toggleFavorite(product.id),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit_outlined),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProductFormPage(product: product),
-                      ),
-                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete_outline, color: Colors.red),

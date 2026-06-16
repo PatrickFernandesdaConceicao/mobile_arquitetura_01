@@ -30,17 +30,6 @@ class ProductRemoteDatasource {
     return ProductModel.fromJson(jsonDecode(response.body));
   }
 
-  Future<ProductModel> updateProduct(ProductModel product) async {
-    final response = await client.put(
-      '$_baseUrl/${product.id}',
-      body: jsonEncode(product.toJson()),
-    );
-    if (response.statusCode != 200) {
-      throw Exception('Erro ao atualizar produto: ${response.statusCode}');
-    }
-    return ProductModel.fromJson(jsonDecode(response.body));
-  }
-
   Future<void> deleteProduct(int id) async {
     final response = await client.delete('$_baseUrl/$id');
     if (response.statusCode != 200) {

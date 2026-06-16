@@ -55,18 +55,6 @@ class ProductListNotifier extends StateNotifier<ProductState> {
     }
   }
 
-  Future<void> updateProduct(Product product) async {
-    try {
-      await repository.updateProduct(product);
-      final updated = state.products
-          .map((p) => p.id == product.id ? product : p)
-          .toList();
-      state = state.copyWith(products: updated);
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    }
-  }
-
   Future<void> deleteProduct(int id) async {
     try {
       await repository.deleteProduct(id);

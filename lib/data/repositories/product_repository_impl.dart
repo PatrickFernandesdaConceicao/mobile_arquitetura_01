@@ -51,16 +51,6 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Product> updateProduct(Product product) async {
-    try {
-      final model = await remote.updateProduct(_toModel(product));
-      return _toEntity(model);
-    } catch (e) {
-      throw Failure("Não foi possível atualizar o produto");
-    }
-  }
-
-  @override
   Future<void> deleteProduct(int id) async {
     try {
       await remote.deleteProduct(id);
